@@ -27,6 +27,38 @@ namespace AudicaTools
             Array.Copy(bytes, start, dst, 0, dst.Length);
             File.WriteAllBytes(filePath, dst);
         }
+
+        public float[] GetAudioClipData()
+        {
+            //ogg export courtesy of the Audica Modding Discord
+            byte[] oggStartLocation = new byte[4];
+
+            oggStartLocation[0] = bytes[4];
+            oggStartLocation[1] = bytes[5];
+            oggStartLocation[2] = bytes[6];
+            oggStartLocation[3] = bytes[7];
+
+            int start = BitConverter.ToInt32(oggStartLocation, 0);
+
+            byte[] dst = new byte[bytes.Length - start];
+            Array.Copy(bytes, start, dst, 0, dst.Length);
+
+            return ConvertByteToFloat(bytes);
+        }
+
+
+        private float[] ConvertByteToFloat(byte[] array)
+        {
+            float[] floatArr = new float[array.Length / 4];
+            for (int i = 0; i < floatArr.Length; i++)
+            {
+                if (BitConverter.IsLittleEndian)
+                    Array.Reverse(array, i * 4, 4);
+                floatArr[i] = BitConverter.ToSingle(array, i * 4) / 0x80000000;
+            }
+            return floatArr;
+        }
+
     }
 
 }
