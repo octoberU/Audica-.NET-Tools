@@ -46,7 +46,7 @@ namespace AudicaTools
                 throw new ArgumentException("File path doesn't lead to an .audica file", filePath);
         }
 
-        private T ReadJsonEntry<T>(ZipArchive zip, string entryName)
+        private static T ReadJsonEntry<T>(ZipArchive zip, string entryName)
         {
             if (zip.GetEntry(entryName) == null) return default(T);
             var descStream = zip.GetEntry(entryName)
@@ -56,6 +56,13 @@ namespace AudicaTools
                 string text = reader.ReadToEnd();
                 return JsonConvert.DeserializeObject<T>(text);
             }
+        }
+
+        public static Description GetDescOnly(string filePath)
+        {
+            CheckPath(filePath);
+            ZipArchive zip = ZipFile.OpenRead(filePath);
+            return ReadJsonEntry<Description>(zip, "song.desc");
         }
     }
 
