@@ -44,6 +44,11 @@ namespace AudicaTools
             Array.Copy(bytes, start, dst, 0, dst.Length);
 
             return ConvertByteToFloat(bytes);
+            
+            //Example Usage:
+            //var songData = Audica.[AnyMoggHere].GetAudioClipData();
+            //AudioClip audioClip = AudioClip.Create("song", songData.Length, 1, 44100, false, false);
+            //audioClip.SetData(songData, 0);
         }
 
 
