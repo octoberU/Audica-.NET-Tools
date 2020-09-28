@@ -27,8 +27,8 @@ Console.WriteLine(desc.title);
 Loading, modifying and exporting
 ```cs
 var audica = new Audica(filepath);
-        audica.desc.title = "new song title";
-        audica.Export(newfilepath);
+audica.desc.title = "new song title";
+audica.Export(newfilepath);
 ```
 
 
