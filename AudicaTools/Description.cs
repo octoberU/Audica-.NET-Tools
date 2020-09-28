@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
+using System.IO;
+
 namespace AudicaTools
 {
     [Serializable]
@@ -21,6 +24,13 @@ namespace AudicaTools
         public double previewStartSeconds;
         public bool useMidiForCues;
         public bool hidden;
+
+        public MemoryStream GetMemoryStream()
+        {
+            var jsonString = JsonConvert.SerializeObject(this);
+            return Utility.GenerateStreamFromString(jsonString);
+        }
+
     }
 
 }

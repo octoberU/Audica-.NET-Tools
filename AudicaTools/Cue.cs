@@ -9,10 +9,17 @@ namespace AudicaTools
         public float tickLength;
         public int pitch;
         public int velocity;
-        public Vector2 gridOffset;
+        public GridOffset gridOffset;
         public float zOffset;
         public int handType;
         public int behavior;
+
+        [Serializable]
+        public struct GridOffset
+        {
+            public float x;
+            public float y;
+        }
     }
 
 }

@@ -6,9 +6,11 @@ namespace AudicaTools
     {
         public byte[] bytes;
 
-        public Mogg(byte[] bytes)
+        public Mogg(Stream stream)
         {
-            this.bytes = bytes;
+            var ms = new MemoryStream();
+            stream.CopyTo(ms);
+            this.bytes = ms.ToArray();
         }
 
         public void ExportToOgg(string filePath)
@@ -26,6 +28,11 @@ namespace AudicaTools
             byte[] dst = new byte[bytes.Length - start];
             Array.Copy(bytes, start, dst, 0, dst.Length);
             File.WriteAllBytes(filePath, dst);
+        }
+
+        public MemoryStream GetMemoryStream()
+        {
+            return new MemoryStream(bytes);
         }
 
         public float[] GetAudioClipData()
