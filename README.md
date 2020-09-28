@@ -24,6 +24,14 @@ Description desc = Audica.GetDescOnly(filepath);
 Console.WriteLine(desc.title);
 ```
 
+Loading, modifying and exporting
+```cs
+var audica = new Audica(filepath);
+        audica.desc.title = "new song title";
+        audica.Export(newfilepath);
+```
+
+
 ### To do:
-* Serialization
 * Reading tempo data
+* Creating `.audica` files from scratch
