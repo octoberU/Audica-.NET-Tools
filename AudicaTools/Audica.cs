@@ -12,7 +12,7 @@ namespace AudicaTools
         public Difficulty advanced;
         public Difficulty expert;
 
-        public Stream midi;
+        public MidiFile midi;
 
         public Description desc;
 
@@ -42,8 +42,8 @@ namespace AudicaTools
             if(this.moggSongSustainR != null) this.songSustainR = new Mogg(zip.GetEntry(moggSongSustainR.moggPath).Open());
 
             this.song = new Mogg(zip.GetEntry(moggSong.moggPath).Open());
-            this.midi = zip.GetEntry(desc.midiFile).Open();
-            //this.midi = new MidiFile(zip.GetEntry(desc.midiFile).Open(), false);
+            //this.midi = zip.GetEntry(desc.midiFile).Open();
+            this.midi = new MidiFile(zip.GetEntry(desc.midiFile).Open(), true);
             //this.moggSongSustainL = new MoggSong(zip.GetEntry(this.desc.sustainSongLeft).Open());
             //this.moggSongSustainR = new MoggSong(zip.GetEntry(this.desc.sustainSongRight).Open());
         }
@@ -96,7 +96,7 @@ namespace AudicaTools
 
                     AddEntryFromStream(zipArchive, desc.moggSong, moggSong.GetMemoryStream());
 
-                    AddEntryFromStream(zipArchive, desc.midiFile, midi);
+                    AddEntryFromStream(zipArchive, desc.midiFile, Utility.ExportMidiToStream(midi.Events));
                 }
 
             }
