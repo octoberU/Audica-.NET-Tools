@@ -18,6 +18,12 @@ foreach (var cue in audica.expert.cues)
 }
 ```
 
+Getting metadata without parsing the whole .audica file
+```cs
+Description desc = Audica.GetDescOnly(filepath);
+Console.WriteLine(desc.title);
+```
+
 ### To do:
 * Serialization
 * Reading tempo data
