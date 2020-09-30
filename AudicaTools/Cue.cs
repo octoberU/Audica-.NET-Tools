@@ -14,6 +14,18 @@ namespace AudicaTools
         public int handType;
         public int behavior;
 
+        public Cue(float tick, float tickLength, int pitch, int velocity, GridOffset gridOffset, float zOffset, int handType, int behavior)
+        {
+            this.tick = tick;
+            this.tickLength = tickLength;
+            this.pitch = pitch;
+            this.velocity = velocity;
+            this.gridOffset = gridOffset;
+            this.zOffset = zOffset;
+            this.handType = handType;
+            this.behavior = behavior;
+        }
+
         [Serializable]
         public struct GridOffset
         {
