@@ -7,7 +7,7 @@ using System.Text;
 
 namespace AudicaTools
 {
-    internal static class Utility
+    internal static partial class Utility
     {
         public static MemoryStream GenerateStreamFromString(string value)
         {
@@ -78,5 +78,8 @@ namespace AudicaTools
             }
 
         }
+
+
+
     }
 }

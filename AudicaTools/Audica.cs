@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using NAudio.Midi;
+using NAudio.Mixer;
 using Newtonsoft.Json;
 namespace AudicaTools
 {
@@ -13,6 +15,7 @@ namespace AudicaTools
         public Difficulty expert;
 
         public MidiFile midi;
+        public List<TempoData> tempoData = new List<TempoData>();
 
         public Description desc;
 
@@ -44,11 +47,28 @@ namespace AudicaTools
             this.song = new Mogg(zip.GetEntry(moggSong.moggPath).Open());
             //this.midi = zip.GetEntry(desc.midiFile).Open();
             this.midi = new MidiFile(zip.GetEntry(desc.midiFile).Open(), true);
+            this.tempoData = ReadTempoEvents(midi.Events);
             //this.moggSongSustainL = new MoggSong(zip.GetEntry(this.desc.sustainSongLeft).Open());
             //this.moggSongSustainR = new MoggSong(zip.GetEntry(this.desc.sustainSongRight).Open());
         }
 
-  
+        
+        public List<TempoData> ReadTempoEvents(MidiEventCollection events)
+        {
+            var tempList = new List<TempoData>();
+            foreach (var eventList in events)
+            {
+                foreach (var e in eventList)
+                {
+                    if (e is TempoEvent)
+                    {
+                        TempoEvent tempo = (e as TempoEvent);
+                        tempList.Add(new TempoData((int)tempo.AbsoluteTime, (ulong)tempo.MicrosecondsPerQuarterNote));
+                    }
+                }
+            }
+            return tempList;
+        }
 
         private static void CheckPath(string filePath)
         {
@@ -96,7 +116,7 @@ namespace AudicaTools
 
                     AddEntryFromStream(zipArchive, desc.moggSong, moggSong.GetMemoryStream());
 
-                    AddEntryFromStream(zipArchive, desc.midiFile, Utility.ExportMidiToStream(midi.Events));
+                    AddEntryFromStream(zipArchive, desc.midiFile, ExportTempoEvents());
                 }
 
             }
@@ -117,6 +137,18 @@ namespace AudicaTools
             {
                 stream.CopyTo(zipEntryStream);
             }
+        }
+
+        private MemoryStream ExportTempoEvents()
+        {
+            MidiEventCollection events = new MidiEventCollection(0, 480);
+            foreach (var tempo in tempoData)
+            {
+                events.AddEvent(new TempoEvent((int)tempo.microsecondsPerQuarterNote, (long)tempo.tick), 0);
+            }
+            events.PrepareForExport();
+
+            return Utility.ExportMidiToStream(events);
         }
     }
 
