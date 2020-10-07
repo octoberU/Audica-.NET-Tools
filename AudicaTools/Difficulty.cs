@@ -9,8 +9,8 @@ namespace AudicaTools
     public class Difficulty
     {
         public List<Cue> cues;
-        public List<Cue> repeaters;
-        public float targetSpeed;
+        public List<Cue> repeaters = new List<Cue>();
+        public float targetSpeed = 1f;
 
         public MemoryStream GetMemoryStream()
         {
