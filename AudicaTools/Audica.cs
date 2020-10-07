@@ -44,7 +44,9 @@ namespace AudicaTools
             if(this.moggSongSustainL != null) this.songSustainL = new Mogg(zip.GetEntry(moggSongSustainL.moggPath).Open());
             if(this.moggSongSustainR != null) this.songSustainR = new Mogg(zip.GetEntry(moggSongSustainR.moggPath).Open());
 
-            this.song = new Mogg(zip.GetEntry(moggSong.moggPath).Open());
+            ZipArchiveEntry songEntry = zip.GetEntry(moggSong.moggPath);
+            if(songEntry != null) this.song = new Mogg(songEntry.Open());
+            
             //this.midi = zip.GetEntry(desc.midiFile).Open();
             this.midi = new MidiFile(zip.GetEntry(desc.midiFile).Open(), true);
             this.tempoData = ReadTempoEvents(midi.Events);
