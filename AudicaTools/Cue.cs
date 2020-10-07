@@ -5,8 +5,8 @@ namespace AudicaTools
     [Serializable]
     public class Cue
     {
-        public float tick;
-        public float tickLength;
+        public int tick;
+        public int tickLength;
         public int pitch;
         public int velocity;
         public GridOffset gridOffset;
@@ -14,7 +14,7 @@ namespace AudicaTools
         public int handType;
         public int behavior;
 
-        public Cue(float tick, float tickLength, int pitch, int velocity, GridOffset gridOffset, float zOffset, int handType, int behavior)
+        public Cue(int tick, int tickLength, int pitch, int velocity, GridOffset gridOffset, float zOffset, int handType, int behavior)
         {
             this.tick = tick;
             this.tickLength = tickLength;
