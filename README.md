@@ -33,5 +33,4 @@ audica.Export(newfilepath);
 
 
 ### To do:
-* Reading tempo data
 * Creating `.audica` files from scratch
