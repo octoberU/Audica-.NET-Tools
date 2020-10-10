@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using DifficultyCalculation;
 using NAudio.Midi;
 using NAudio.Mixer;
 using Newtonsoft.Json;
@@ -156,6 +157,12 @@ namespace AudicaTools
         public DifficultyCalculator GetDifficultyRatings()
         {
             return new DifficultyCalculator(this);
+        }
+        
+        public float GetRatingForDifficulty(Difficulty difficulty)
+        {
+            var calculatedDiff = new CalculatedDifficulty(difficulty, this.tempoData);
+            return calculatedDiff.difficultyRating;
         }
     }
 
