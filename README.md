@@ -34,3 +34,7 @@ audica.Export(newfilepath);
 
 ### To do:
 * Creating `.audica` files from scratch
+
+### Dependencies
+[NAudio](https://www.nuget.org/packages/NAudio/)  
+[NewtonsoftJson](https://www.nuget.org/packages/Newtonsoft.Json/)  
