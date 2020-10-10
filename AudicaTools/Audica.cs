@@ -152,6 +152,11 @@ namespace AudicaTools
 
             return Utility.ExportMidiToStream(events);
         }
+
+        public DifficultyCalculator GetDifficultyRatings()
+        {
+            return new DifficultyCalculator(this);
+        }
     }
 
 }
