@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Numerics;
 namespace AudicaTools
 {
@@ -14,6 +15,7 @@ namespace AudicaTools
         public HandType handType;
         public Behavior behavior;
 
+        [JsonConstructor]
         public Cue(int tick, int tickLength, int pitch, int velocity, GridOffset gridOffset, float zOffset, int handType, int behavior)
         {
             this.tick = tick;
