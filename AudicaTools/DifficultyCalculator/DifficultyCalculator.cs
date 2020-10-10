@@ -88,7 +88,7 @@ public class CalculatedDifficulty
 
     public void EvaluateCues(List<Cue> cues, List<TempoData> tempoData)
     {
-        this.length = AudioDriver.TickSpanToMs(songData, cues[0].tick, cues[cues.Count - 1].tick); //this requires tickToMs
+        this.length = TempoData.TickToMilliseconds(cues[cues.Count - 1].tick, tempoData) - TempoData.TickToMilliseconds(cues[0].tick, tempoData);
         if (cues.Count >= 15 && this.length > 30000f)
         {
             SplitCues(cues);
