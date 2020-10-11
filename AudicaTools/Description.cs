@@ -25,6 +25,12 @@ namespace AudicaTools
         public bool useMidiForCues;
         public bool hidden;
 
+        //Extra modded entries
+        public string customExpert = null;
+        public string customAdvanced = null;
+        public string customModerate = null;
+        public string customBeginner = null;
+
         public MemoryStream GetMemoryStream()
         {
             var jsonString = JsonConvert.SerializeObject(this);
