@@ -33,7 +33,10 @@ namespace AudicaTools
 
         public MemoryStream GetMemoryStream()
         {
-            var jsonString = JsonConvert.SerializeObject(this);
+            var jsonString = JsonConvert.SerializeObject(this, Formatting.Indented, new JsonSerializerSettings
+            {
+                NullValueHandling = NullValueHandling.Ignore
+            });
             return Utility.GenerateStreamFromString(jsonString);
         }
 
