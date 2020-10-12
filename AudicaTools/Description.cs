@@ -19,7 +19,7 @@ namespace AudicaTools
         public string fxSong;
         public string songEndEvent;
         public string highScoreEvent;
-        public string songEndPitchAdjust;
+        public float songEndPitchAdjust;
         public float prerollSeconds;
         public double previewStartSeconds;
         public bool useMidiForCues;
