@@ -187,7 +187,7 @@ namespace AudicaTools
             List<TempoData> tempTempoData = new List<TempoData>(tempoData);
 
             int lastTempo = 0;
-            foreach (var tempoChange in tempoData)
+            foreach (var tempoChange in tempoData) // Remove all bpm markers that don't change the current tempo(for eg. metronome resets)
             {
                 int tempo = (int)Math.Round(TempoData.GetBPMFromMicrosecondsPerQuaterNote(tempoChange.microsecondsPerQuarterNote), MidpointRounding.AwayFromZero);
                 if (tempo == lastTempo) tempTempoData.Remove(tempoChange);
