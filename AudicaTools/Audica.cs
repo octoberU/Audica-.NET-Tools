@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using DifficultyCalculation;
 using NAudio.Midi;
 using NAudio.Mixer;
@@ -163,6 +164,59 @@ namespace AudicaTools
         {
             var calculatedDiff = new CalculatedDifficulty(difficulty, this.tempoData);
             return calculatedDiff.difficultyRating;
+        }
+
+        public string GetHashedSongID()
+        {
+            return desc.songID + "_" + GetHash();
+        }
+
+        private string GetHash()
+        {
+            string expertHash = CreateHashForDifficulty(expert);
+            string advancedHash = CreateHashForDifficulty(advanced);
+            string moderateHash = CreateHashForDifficulty(moderate);
+            string beginnerHash = CreateHashForDifficulty(beginner);
+            return Utility.CreateMD5(beginnerHash + moderateHash + advancedHash + expertHash);
+        }
+
+        private string CreateHashForDifficulty(Difficulty difficulty)
+        {
+            //A tempo descriptor is a semi-color separated list of tempos, if theres a single tempo then we only append the first tempo. Else we use "tempo;tick;" for each tempochange
+            string tempoDescriptor = "";
+            List<TempoData> tempTempoData = new List<TempoData>(tempoData);
+
+            int lastTempo = 0;
+            foreach (var tempoChange in tempoData)
+            {
+                int tempo = (int)Math.Round(TempoData.GetBPMFromMicrosecondsPerQuaterNote(tempoChange.microsecondsPerQuarterNote), MidpointRounding.AwayFromZero);
+                if (tempo == lastTempo) tempTempoData.Remove(tempoChange);
+                lastTempo = tempo;
+            }
+
+            if (tempoData[0].tick == 0 && tempTempoData.Count < 2) tempoDescriptor += ((int)TempoData.GetBPMFromMicrosecondsPerQuaterNote(tempoData[0].microsecondsPerQuarterNote)).ToString() + ";";
+            else
+            {
+                foreach (var tempoChange in tempTempoData)
+                {
+                    int tempo = (int)Math.Round(TempoData.GetBPMFromMicrosecondsPerQuaterNote(tempoChange.microsecondsPerQuarterNote), MidpointRounding.AwayFromZero);
+                    tempoDescriptor += tempo.ToString() + ";" + tempoChange.tick.ToString() + ";";
+
+                }
+                tempoDescriptor += ";"; //We add an extra semi-colon if there are multiple bpms
+            }
+            string scoreDataDescriptor = "500;750;750;1000;1000;1000;10;4;"; //ScoreData.GetDescriptor
+            string scoringDescriptor = "0.500;2.500;2.000;100.000;100.000;0.975;0.250;0.600;"; //KataConfig.GetScoringDescriptor
+            
+            string cueDescriptors = "";
+            if (difficulty != null)
+            {
+                foreach (var cue in difficulty.cues)
+                {
+                    cueDescriptors += cue.GetDescriptor();
+                } 
+            }
+            return Utility.CreateMD5(tempoDescriptor + scoreDataDescriptor + scoringDescriptor + cueDescriptors);
         }
     }
 

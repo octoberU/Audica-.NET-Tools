@@ -66,6 +66,17 @@ namespace AudicaTools
             Left,
             None
         }
+
+        public string GetDescriptor()
+        {
+            return $"{tick};" +
+                $"{tickLength};" +
+                $"{pitch};{velocity};" +
+                $"{Math.Round(gridOffset.x,3,MidpointRounding.AwayFromZero).ToString("n3")};" +
+                $"{Math.Round(gridOffset.y,3, MidpointRounding.AwayFromZero).ToString("n3")};" +
+                $"{(int)handType};" +
+                $"{(int)behavior};";
+        }
     }
 
 }
