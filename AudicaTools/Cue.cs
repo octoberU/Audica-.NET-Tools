@@ -72,11 +72,13 @@ namespace AudicaTools
             return $"{tick};" +
                 $"{tickLength};" +
                 $"{pitch};{velocity};" +
-                $"{Math.Round(gridOffset.x,3,MidpointRounding.AwayFromZero).ToString("n3")};" +
-                $"{Math.Round(gridOffset.y,3, MidpointRounding.AwayFromZero).ToString("n3")};" +
+                $"{Utility.GetMonoToString(gridOffset.x)};" +
+                $"{Utility.GetMonoToString(gridOffset.y)};" +
                 $"{(int)handType};" +
                 $"{(int)behavior};";
         }
+
+
     }
 
 }

@@ -97,5 +97,9 @@ namespace AudicaTools
         }
 
 
+        public static string GetMonoToString(float f)
+        {
+            return BitConverter.Int32BitsToSingle(BitConverter.SingleToInt32Bits(f) + 1).ToString("N3");
+        }
     }
 }
