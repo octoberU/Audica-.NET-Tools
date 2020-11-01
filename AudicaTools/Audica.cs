@@ -194,7 +194,7 @@ namespace AudicaTools
                 lastTempo = tempo;
             }
 
-            if (tempoData[0].tick == 0 && tempTempoData.Count < 2) tempoDescriptor += ((int)TempoData.GetBPMFromMicrosecondsPerQuaterNote(tempoData[0].microsecondsPerQuarterNote)).ToString() + ";";
+            if (tempoData[0].tick == 0 && tempTempoData.Count < 2) tempoDescriptor += ((int)Math.Round(TempoData.GetBPMFromMicrosecondsPerQuaterNote(tempoData[0].microsecondsPerQuarterNote), MidpointRounding.AwayFromZero)).ToString() + ";";
             else
             {
                 foreach (var tempoChange in tempTempoData)

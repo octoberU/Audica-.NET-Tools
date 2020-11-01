@@ -69,13 +69,15 @@ namespace AudicaTools
 
         public string GetDescriptor()
         {
+            var zOffsetString = zOffset != 0f ? $"{Utility.GetMonoToString(zOffset)};" : "";
             return $"{tick};" +
                 $"{tickLength};" +
                 $"{pitch};{velocity};" +
                 $"{Utility.GetMonoToString(gridOffset.x)};" +
                 $"{Utility.GetMonoToString(gridOffset.y)};" +
                 $"{(int)handType};" +
-                $"{(int)behavior};";
+                $"{(int)behavior};" +
+                $"{zOffsetString}";
         }
 
 
