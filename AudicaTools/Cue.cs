@@ -16,10 +16,10 @@ namespace AudicaTools
         public Behavior behavior;
 
         [JsonConstructor]
-        public Cue(int tick, int tickLength, int pitch, int velocity, GridOffset gridOffset, float zOffset, int handType, int behavior)
+        public Cue(int tick, float tickLength, int pitch, int velocity, GridOffset gridOffset, float zOffset, int handType, int behavior)
         {
             this.tick = tick;
-            this.tickLength = tickLength;
+            this.tickLength = (int)tickLength; // This is a fix for old maps
             this.pitch = pitch;
             this.velocity = velocity;
             this.gridOffset = gridOffset;

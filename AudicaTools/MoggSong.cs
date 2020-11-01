@@ -43,7 +43,7 @@ namespace AudicaTools
             }
             catch (Exception)
             {
-                Console.WriteLine("Moggsong is invalid. Using defaults instead");
+                //Console.WriteLine("Moggsong is invalid. Using defaults instead");
                 return new MoggVol(0f, 0f);
             }
         }
@@ -124,7 +124,7 @@ namespace AudicaTools
             }
             catch (Exception)
             {
-                Console.WriteLine("Mono Moggsong is invalid. Using defaults instead");
+                //Console.WriteLine("Mono Moggsong is invalid. Using defaults instead");
                 return 0f;
             }
         }

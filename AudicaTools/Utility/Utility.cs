@@ -105,7 +105,7 @@ namespace AudicaTools
             int valDecimals = valSplit.Length > 1 ? valSplit[1].Length : 0;
             string[] nextValSplit = nextVal.ToString().Split(".");
             int nextValDecimals = nextValSplit.Length > 1 ? nextValSplit[1].Length : 0;
-            int precision = Math.Max(Math.Min(Math.Max(valDecimals, nextValDecimals), 15), 1);
+            int precision = Math.Max(Math.Min(Math.Max(valDecimals, nextValDecimals), 15), 8);
             double roundedVal = Math.Round(Math.Round(val, precision - 1, MidpointRounding.AwayFromZero), 3, MidpointRounding.AwayFromZero);
             string result = roundedVal.ToString("N3");
             return result;
