@@ -94,11 +94,37 @@ namespace AudicaTools
             }
         }
 
-        public static Description GetDescOnly(string filePath)
+        public static AudicaMetadata GetMetadata(string filePath)
         {
             CheckPath(filePath);
             ZipArchive zip = ZipFile.OpenRead(filePath);
-            return ReadJsonEntry<Description>(zip, "song.desc");
+            var desc = ReadJsonEntry<Description>(zip, "song.desc");
+            
+            bool expert, advanced, moderate, beginner;
+            expert = advanced = moderate = beginner = false;
+
+            foreach (var entry in zip.Entries)
+            {
+                switch (entry.Name)
+                {
+                    case "expert.cues":
+                        expert = true;
+                        break;
+                    case "advanced.cues":
+                        advanced = true;
+                        break;
+                    case "moderate.cues":
+                        moderate = true;
+                        break;
+                    case "beginner.cues":
+                        beginner = true;
+                        break;
+                    default:
+                        break;
+                };
+            }
+
+            return new AudicaMetadata(desc, expert, advanced, moderate, beginner, new FileInfo(filePath));
         }
 
         public void Export(string filePath)
@@ -217,6 +243,26 @@ namespace AudicaTools
                 } 
             }
             return Utility.CreateMD5(tempoDescriptor + scoreDataDescriptor + scoringDescriptor + cueDescriptors);
+        }
+
+        public struct AudicaMetadata
+        {
+            Description desc;
+            bool hasExpert;
+            bool hasAdvanced;
+            bool hasModerate;
+            bool hasBeginner;
+            FileInfo fileInfo;
+
+            public AudicaMetadata(Description desc, bool hasExpert, bool hasAdvanced, bool hasModerate, bool hasBeginner, FileInfo fileInfo)
+            {
+                this.desc = desc;
+                this.hasExpert = hasExpert;
+                this.hasAdvanced = hasAdvanced;
+                this.hasModerate = hasModerate;
+                this.hasBeginner = hasBeginner;
+                this.fileInfo = fileInfo;
+            }
         }
     }
 

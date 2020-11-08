@@ -9,6 +9,7 @@ namespace AudicaTools
 {
     internal static partial class Utility
     {
+        internal static bool IsMono { get; } = Type.GetType("Mono.Runtime") != null;
         public static MemoryStream GenerateStreamFromString(string value)
         {
             return new MemoryStream(Encoding.UTF8.GetBytes(value ?? ""));
@@ -99,6 +100,7 @@ namespace AudicaTools
 
         public static string GetMonoToString(float f)
         {
+            if (IsMono) return f.ToString("N3");
             float val = f;
             float nextVal = BitConverter.Int32BitsToSingle(BitConverter.SingleToInt32Bits(val) + 1);
             string[] valSplit = val.ToString().Split(".");
