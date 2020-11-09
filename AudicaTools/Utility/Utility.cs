@@ -112,5 +112,12 @@ namespace AudicaTools
             string result = roundedVal.ToString("N3");
             return result;
         }
+
+        public static byte[] GetBytesFromStream(Stream stream)
+        {
+            var ms = new MemoryStream();
+            stream.CopyTo(ms);
+            return = ms.ToArray();
+        }
     }
 }
