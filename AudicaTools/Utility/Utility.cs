@@ -117,7 +117,7 @@ namespace AudicaTools
         {
             var ms = new MemoryStream();
             stream.CopyTo(ms);
-            return = ms.ToArray();
+            return ms.ToArray();
         }
     }
 }
