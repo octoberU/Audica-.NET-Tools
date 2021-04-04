@@ -31,6 +31,13 @@ audica.desc.title = "new song title";
 audica.Export(newfilepath);
 ```
 
+Enumerate over difficulties
+```cs
+foreach(Difficulty difficulty in new Audica(filepath))
+    foreach(Cue cue in difficulty)
+        Console.WriteLine(cue.tick);
+```
+
 
 ### To do:
 * Creating `.audica` files from scratch

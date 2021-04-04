@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
@@ -9,7 +10,7 @@ using NAudio.Mixer;
 using Newtonsoft.Json;
 namespace AudicaTools
 {
-    public class Audica
+    public class Audica : IEnumerable<Difficulty>, IEquatable<Audica>
     {
         public Difficulty beginner;
         public Difficulty moderate;
@@ -44,23 +45,23 @@ namespace AudicaTools
             this.moderate = ReadJsonEntry<Difficulty>(zip, "moderate.cues");
             this.beginner = ReadJsonEntry<Difficulty>(zip, "beginner.cues");
             
-            this.moggSong = new MoggSong(zip.GetEntry(this.desc.moggSong).Open());
-            if(this.desc.sustainSongLeft != "") this.moggSongSustainL = new MonoMoggSong(zip.GetEntry(this.desc.sustainSongLeft).Open());
-            if(this.desc.sustainSongRight != "") this.moggSongSustainR = new MonoMoggSong(zip.GetEntry(this.desc.sustainSongRight).Open());
+            this.moggSong = new MoggSong(zip.GetEntry(this.desc.moggSong)?.Open());
+            if(this.desc.sustainSongLeft != "") this.moggSongSustainL = new MonoMoggSong(zip.GetEntry(this.desc.sustainSongLeft)?.Open());
+            if(this.desc.sustainSongRight != "") this.moggSongSustainR = new MonoMoggSong(zip.GetEntry(this.desc.sustainSongRight)?.Open());
 
-            if(this.moggSongSustainL != null) this.songSustainL = new Mogg(zip.GetEntry(moggSongSustainL.moggPath).Open());
-            if(this.moggSongSustainR != null) this.songSustainR = new Mogg(zip.GetEntry(moggSongSustainR.moggPath).Open());
+            if(this.moggSongSustainL != null) this.songSustainL = new Mogg(zip.GetEntry(moggSongSustainL.moggPath)?.Open());
+            if(this.moggSongSustainR != null) this.songSustainR = new Mogg(zip.GetEntry(moggSongSustainR.moggPath)?.Open());
 
             ZipArchiveEntry songEntry = zip.GetEntry(moggSong.moggPath);
             if(songEntry != null) this.song = new Mogg(songEntry.Open());
             
             //this.midi = zip.GetEntry(desc.midiFile).Open();
-            this.midi = new MidiFile(zip.GetEntry(desc.midiFile).Open(), true);
+            this.midi = new MidiFile(zip.GetEntry(desc.midiFile)?.Open(), true);
             this.tempoData = ReadTempoEvents(midi.Events);
             //this.moggSongSustainL = new MoggSong(zip.GetEntry(this.desc.sustainSongLeft).Open());
             //this.moggSongSustainR = new MoggSong(zip.GetEntry(this.desc.sustainSongRight).Open());
 
-            if (zipFileNames.Contains("song.png")) Utility.GetBytesFromStream(zip.GetEntry("song.png").Open());
+            if (zipFileNames.Contains("song.png")) albumArt = Utility.GetBytesFromStream(zip.GetEntry("song.png")?.Open());
         }
 
         
@@ -98,13 +99,18 @@ namespace AudicaTools
         private static T ReadJsonEntry<T>(ZipArchive zip, string entryName)
         {
             if (zip.GetEntry(entryName) == null) return default(T);
-            var descStream = zip.GetEntry(entryName)
+            var descStream = zip.GetEntry(entryName)?
                 .Open();
-            using (var reader = new StreamReader(descStream))
+
+            if (descStream != null)
             {
-                string text = reader.ReadToEnd();
-                return JsonConvert.DeserializeObject<T>(text);
+                using (var reader = new StreamReader(descStream))
+                {
+                    string text = reader.ReadToEnd();
+                    return JsonConvert.DeserializeObject<T>(text);
+                }
             }
+            else return default(T);
         }
 
         public static AudicaMetadata GetMetadata(string filePath)
@@ -260,14 +266,16 @@ namespace AudicaTools
 
         public struct AudicaMetadata
         {
-            Description desc;
-            bool hasExpert;
-            bool hasAdvanced;
-            bool hasModerate;
-            bool hasBeginner;
-            FileInfo fileInfo;
+            public Description desc;
+            public bool hasExpert;
+            public bool hasAdvanced;
+            public bool hasModerate;
+            public bool hasBeginner;
+            public FileInfo fileInfo;
+            public string weakHash;
 
-            public AudicaMetadata(Description desc, bool hasExpert, bool hasAdvanced, bool hasModerate, bool hasBeginner, FileInfo fileInfo)
+            public AudicaMetadata(Description desc, bool hasExpert, bool hasAdvanced, bool hasModerate,
+                bool hasBeginner, FileInfo fileInfo)
             {
                 this.desc = desc;
                 this.hasExpert = hasExpert;
@@ -275,8 +283,19 @@ namespace AudicaTools
                 this.hasModerate = hasModerate;
                 this.hasBeginner = hasBeginner;
                 this.fileInfo = fileInfo;
+                this.weakHash = Utility.CreateMD5(desc.songID + fileInfo.Length);
             }
         }
+
+        public IEnumerator<Difficulty> GetEnumerator()
+        {
+            foreach (var difficulty in new Difficulty[4] {beginner, moderate, advanced, expert})
+                if (difficulty != null)
+                    yield return difficulty;
+        }
+
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        public bool Equals(Audica other) => GetHashedSongID() == other?.GetHashedSongID();
     }
 
 }
