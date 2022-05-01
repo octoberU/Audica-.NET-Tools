@@ -35,7 +35,7 @@ namespace AudicaTools
         public Audica(string filePath)
         {
             CheckPath(filePath);
-            ZipArchive zip = ZipFile.OpenRead(filePath);
+            using ZipArchive zip = ZipFile.OpenRead(filePath);
 
             string[] zipFileNames = zip.Entries.Select(entry => entry.Name).ToArray(); //Get file names once so that we don't have to loop over entries again
 
