@@ -60,8 +60,12 @@ namespace AudicaTools
             this.tempoData = ReadTempoEvents(midi.Events);
             //this.moggSongSustainL = new MoggSong(zip.GetEntry(this.desc.sustainSongLeft).Open());
             //this.moggSongSustainR = new MoggSong(zip.GetEntry(this.desc.sustainSongRight).Open());
-
             if (zipFileNames.Contains("song.png")) albumArt = Utility.GetBytesFromStream(zip.GetEntry("song.png")?.Open());
+            
+
+            foreach(Difficulty difficulty in this)
+                foreach (Cue cue in difficulty.cues)
+                    cue.parentAudica = new WeakReference<Audica>(this);
         }
 
         

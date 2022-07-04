@@ -15,6 +15,8 @@ namespace AudicaTools
         public HandType handType;
         public Behavior behavior;
 
+        [JsonIgnore] public WeakReference<Audica> parentAudica = new WeakReference<Audica>(null);
+
         [JsonConstructor]
         public Cue(int tick, float tickLength, int pitch, int velocity, GridOffset gridOffset, float zOffset, int handType, int behavior)
         {
@@ -80,7 +82,8 @@ namespace AudicaTools
                 $"{zOffsetString}";
         }
 
-
+        public float GetMsTime()
+            => parentAudica.TryGetTarget(out Audica audica) ? TempoData.TickToMilliseconds(tick, audica.tempoData) : tick;
     }
 
 }
