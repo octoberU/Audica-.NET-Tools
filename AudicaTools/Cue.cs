@@ -83,7 +83,14 @@ namespace AudicaTools
         }
 
         public float GetMsTime()
-            => parentAudica.TryGetTarget(out Audica audica) ? TempoData.TickToMilliseconds(tick, audica.tempoData) : tick;
+            => parentAudica.TryGetTarget(out Audica audica) 
+                ? TempoData.TickToMilliseconds(tick, audica.tempoData) 
+                : tick;
+
+        public float GetEndMsTime()
+            => parentAudica.TryGetTarget(out Audica audica)
+                ? TempoData.TickToMilliseconds(tick + tickLength, audica.tempoData)
+                : tick + tickLength;
     }
 
 }
